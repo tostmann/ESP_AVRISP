@@ -23,7 +23,7 @@ Original version:
 // #define AVRISP_ACTIVE_HIGH_RESET
 
 // SPI clock frequency in Hz
-#define AVRISP_SPI_FREQ   300e3
+#define AVRISP_SPI_FREQ 300000ul
 
 // programmer states
 typedef enum {
@@ -76,7 +76,7 @@ protected:
 
     inline void _reject_incoming(void);     // reject any incoming tcp connections
 
-    int avrisp(void);           // handle incoming STK500 commands
+    void avrisp(void);           // handle incoming STK500 commands
 
     uint8_t getch(void);        // retrieve a character from the remote end
     uint8_t spi_transaction(uint8_t, uint8_t, uint8_t, uint8_t);

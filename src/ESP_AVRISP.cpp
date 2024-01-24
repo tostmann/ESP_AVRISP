@@ -130,7 +130,7 @@ inline void ESP_AVRISP::_reject_incoming(void) {
 }
 
 uint8_t ESP_AVRISP::getch() {
-    while (!_client.available()) yield();
+    while (!_client.available()) { delay(1); yield(); }
     uint8_t b = (uint8_t)_client.read();
     // AVRISP_DEBUG("< %02x", b);
     return b;
@@ -294,7 +294,7 @@ uint8_t ESP_AVRISP::write_flash_pages(int length) {
     int x = 0;
     int page = addr_page(here);
     while (x < length) {
-        yield();
+        delay(1); yield();
         if (page != addr_page(here)) {
             commit(page);
             page = addr_page(here);
@@ -436,7 +436,7 @@ void ESP_AVRISP::read_signature() {
 
 // It seems ArduinoISP is based on the original STK500 (not v2)
 // but implements only a subset of the commands.
-int ESP_AVRISP::avrisp() {
+void ESP_AVRISP::avrisp() {
     uint8_t data, low, high;
     uint8_t ch = getch();
     // AVRISP_DEBUG("CMD 0x%02x", ch);
@@ -529,7 +529,7 @@ int ESP_AVRISP::avrisp() {
 
       // anything else we will return STK_UNKNOWN
     default:
-        AVRISP_DEBUG("??!?");
+        AVRISP_DEBUG("unknown command");
         error++;
         if (Sync_CRC_EOP == getch()) {
             _client.print((char)Resp_STK_UNKNOWN);
